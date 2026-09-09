@@ -1,6 +1,6 @@
-package com.profile.service.controller;
+package com.profile.svc.controller;
 
-import com.profile.service.model.Book;
+import com.profile.svc.model.Book;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

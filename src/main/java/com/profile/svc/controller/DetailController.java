@@ -1,7 +1,6 @@
-package com.profile.service.controller;
+package com.profile.svc.controller;
 
-import com.profile.service.model.Details;
-import org.springframework.http.HttpStatus;
+import com.profile.svc.model.Details;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

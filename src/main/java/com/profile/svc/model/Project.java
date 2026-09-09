@@ -1,4 +1,4 @@
-package com.profile.service.model;
+package com.profile.svc.model;
 
 import lombok.AllArgsConstructor;
 
