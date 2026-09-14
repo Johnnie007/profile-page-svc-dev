@@ -1,15 +1,15 @@
 {
   "id": 1,
-  "firstName": "Johnnie",
-  "lastName": "Hicks",
+  "first_name": "Johnnie",
+  "last_name": "Hicks",
   "message": "Self-taught Software Engineer with 4 years of professional experience. Driven by a quiet curiosity for what can be built, with a deep appreciation for life and God.",
-  "subDetails": "Currently working on tangible and software projects that will be available everywhere.",
+  "sub_details": "Currently working on tangible and software projects that will be available everywhere.",
   "projects": [
     {
       "id": "1",
       "name": "Footprint",
       "category": "Design & Engineering",
-      "yearDeployed": "2023-11-19",
+      "year_deployed": "2023-11-19",
       "link": "https://johnnie007.github.io/FootPrintV2Frontend/#/",
       "stack": ["Angular", "Spring Boot", "Java", "Typescript"],
       "image": "assets/images/footprint.png"
@@ -18,7 +18,7 @@
       "id": "2",
       "name": "Country REST API",
       "category": "Design & Engineering",
-      "yearDeployed": "2021-08-25",
+      "year_deployed": "2021-08-25",
       "link": "https://johnnie007.github.io/CountryRESTAPI/",
       "stack": ["NodeJS", "Javascript", "ExpressJS"],
       "image": "assets/images/api.png"
@@ -27,7 +27,7 @@
       "id": "3",
       "name": "Mosaic Me",
       "category": "Design & Engineering",
-      "yearDeployed": "2021-06-20",
+      "year_deployed": "2021-06-20",
       "link": "https://johnnie007.github.io/mosaic-me/#/",
       "stack": ["React", "Javascript"],
       "image": "assets/images/mosaicMe.png"
@@ -35,7 +35,7 @@
   ],
   "books": {
     "id": "1",
-    "seriesName": "Jessie's Journey's",
+    "series_name": "Jessie's Journey's",
     "books":[{
       "id": "1",
       "title": "Jessie to the Land of Flowers",
@@ -43,14 +43,14 @@
       "format": "Paperback/Digital",
       "price": null,
       "inventory": 0,
-      "printToOrderLink": null,
-      "pdfVersion": null,
+      "print_to_order_link": null,
+      "pdf_version": null,
       "pages": null,
       "cover": "assets/images/placeholder-one.png",
       "category": "Children's Chapter Book",
       "published": {
-        "isPublished": false,
-        "publishedDate": "2026-10-20"
+        "is_published": false,
+        "published_date": "2026-10-20"
       }
     },
       {
@@ -60,14 +60,14 @@
         "format": "Digital",
         "price": null,
         "inventory": 0,
-        "printToOrderLink": null,
-        "pdfVersion": null,
+        "print_to_order_link": null,
+        "pdf_version": null,
         "pages": null,
         "cover": "assets/images/placeholder-two.jpg",
         "category": "Children's Chapter Book",
         "published": {
-          "isPublished": false,
-          "publishedDate": "2027-11-07"
+          "is_published": false,
+          "published_date": "2027-11-07"
         }
       }]
   }
