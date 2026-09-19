@@ -33,7 +33,7 @@
       "image": "assets/images/mosaicMe.png"
     }
   ],
-  "books": {
+  "series": {
     "id": "1",
     "series_name": "Jessie's Journey's",
     "books":[{

@@ -15,8 +15,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
 
     public List<Project> getAllProjects(){
-        List<Project> test = projectRepository.findAllProjects();
-        System.out.println("This is the list: "+ test);
-        return projectRepository.findAllProjects();
+        List<Project> projectList = projectRepository.findAllProjects();
+        return projectList;
     }
 }
