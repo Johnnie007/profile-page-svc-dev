@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: service
+astra:
+  endpoint: ${ASTRA_DB_EP}
+  token: ${ASTRA_DB_TOKEN}
+  keyspace: ${ASTRA_DB_KEYSPACE}
+  tbn:
+    projects: ${TBN_PROJECTS}
+    book: ${TBN_BOOKS}
+    details: ${TBN_USER_DETAILS}
+
+logging:
+  level:
+    com:
+      datastax:
+        astra:
+          internal:
+            command:
+              AbstractCommandRunner: ERROR

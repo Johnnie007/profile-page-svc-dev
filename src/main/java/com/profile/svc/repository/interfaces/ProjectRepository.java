@@ -1,4 +1,4 @@
-package com.profile.svc.repository;
+package com.profile.svc.repository.interfaces;
 
 import com.profile.svc.model.Project;
 import java.util.List;

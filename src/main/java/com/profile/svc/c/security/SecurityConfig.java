@@ -1,4 +1,4 @@
-package com.profile.svc.security;
+package com.profile.svc.c.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

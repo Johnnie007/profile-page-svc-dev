@@ -1,29 +1,38 @@
 package com.profile.svc.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
+import com.datastax.astra.client.tables.mapping.Column;
+import com.datastax.astra.client.tables.mapping.EntityTable;
+import com.datastax.astra.client.tables.mapping.PartitionBy;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-@Entity
+
+@EntityTable
 @Data
+@NoArgsConstructor
 public class Project {
-    @Id
-    String id;
-    @Column(name = "first_name")
+    @PartitionBy(1)
+    @Column( name="project_id")
+    UUID id;
+
+    @Column( name="first_name")
     String name;
-    @Column(name = "category")
-    String category;
-    @Column(name = "year_deployed")
-    Date deployedDate;
-    @Column(name = "link")
+
+    @Column( name="category")
+    List<String> category;
+
+    @Column( name="deployment_date")
+    Instant deployedDate;
+
+    @Column( name="link")
     String externalLink;
-    @Column(name = "stack")
+
+    @Column( name="stack")
     List<String> techStack;
-    @Column(name = "image")
-    String previewImage;
+
+    @Column( name="asset_metadata_type")
+    Metadata imageMetaData;
 }
