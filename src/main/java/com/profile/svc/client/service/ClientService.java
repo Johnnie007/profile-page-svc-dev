@@ -5,6 +5,7 @@ import com.profile.svc.repository.interfaces.BookDetailsRepository;
 import com.profile.svc.repository.interfaces.ProjectRepository;
 import com.profile.svc.repository.interfaces.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +19,7 @@ public class ClientService {
     @Autowired
     private BookDetailsRepository bookDetailsRepository;
 
+    @Cacheable(cacheNames = "client-details-v2", key = "'profile'")
     public ClientModel gatherClientData() {
 
         return ClientModel.builder()
