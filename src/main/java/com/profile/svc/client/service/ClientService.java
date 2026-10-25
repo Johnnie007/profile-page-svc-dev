@@ -1,9 +1,9 @@
 package com.profile.svc.client.service;
 
-import com.profile.svc.model.ClientModel;
-import com.profile.svc.repository.interfaces.BookDetailsRepository;
-import com.profile.svc.repository.interfaces.ProjectRepository;
-import com.profile.svc.repository.interfaces.UserDetailsRepository;
+import com.profile.svc.shared.model.ClientModel;
+import com.profile.svc.shared.repository.interfaces.BookDetailsRepository;
+import com.profile.svc.shared.repository.interfaces.ProjectRepository;
+import com.profile.svc.shared.repository.interfaces.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

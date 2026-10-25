@@ -28,6 +28,11 @@ astra:
     book: ${TBN_BOOKS}
     details: ${TBN_USER_DETAILS}
 
+cloudinary:
+    cloud-name: ${CLOUDINARY_NAME}
+    key: ${CLOUDINARY_KEY}
+    secret: ${CLOUDINARY_SECRET}
+
 logging:
   level:
     com:

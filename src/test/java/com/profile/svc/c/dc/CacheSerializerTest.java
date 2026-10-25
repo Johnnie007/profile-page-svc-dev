@@ -1,9 +1,9 @@
 package com.profile.svc.c.dc;
 
-import com.profile.svc.model.Book;
-import com.profile.svc.model.ClientModel;
-import com.profile.svc.model.Project;
-import com.profile.svc.model.UserDetails;
+import com.profile.svc.shared.model.Book;
+import com.profile.svc.shared.model.ClientModel;
+import com.profile.svc.shared.model.Project;
+import com.profile.svc.shared.model.UserDetails;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 

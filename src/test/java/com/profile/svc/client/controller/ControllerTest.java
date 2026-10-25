@@ -1,7 +1,7 @@
 package com.profile.svc.client.controller;
 
 import com.profile.svc.client.service.ClientService;
-import com.profile.svc.model.ClientModel;
+import com.profile.svc.shared.model.ClientModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

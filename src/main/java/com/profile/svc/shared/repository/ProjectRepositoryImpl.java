@@ -1,8 +1,8 @@
-package com.profile.svc.repository;
+package com.profile.svc.shared.repository;
 
 import com.datastax.astra.client.tables.Table;
-import com.profile.svc.model.Project;
-import com.profile.svc.repository.interfaces.ProjectRepository;
+import com.profile.svc.shared.model.Project;
+import com.profile.svc.shared.repository.interfaces.ProjectRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -24,6 +24,16 @@ public class ProjectRepositoryImpl implements ProjectRepository {
             return collection.findAll().toList();
         } catch (RuntimeException e) {
             log.error("Error retrieving projects list : {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void saveProject(Project project) {
+        try {
+            collection.insertOne(project);
+        } catch (Exception e) {
+            log.error("Error saving project: {}", e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }

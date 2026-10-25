@@ -18,7 +18,7 @@ public class ClientDetailsRateLimitInterceptor implements HandlerInterceptor {
     private final Cache<String, Bucket> buckets;
     private final RateLimitProperties properties;
 
-    protected ClientDetailsRateLimitInterceptor(RateLimitProperties properties) {
+    public ClientDetailsRateLimitInterceptor(RateLimitProperties properties) {
         this.properties = properties;
         this.buckets = Caffeine.newBuilder()
                 .maximumSize(10_000)

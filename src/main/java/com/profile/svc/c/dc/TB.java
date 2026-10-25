@@ -3,9 +3,9 @@ package com.profile.svc.c.dc;
 import com.datastax.astra.client.databases.Database;
 import com.datastax.astra.client.tables.Table;
 import com.profile.svc.c.v.DSCV;
-import com.profile.svc.model.Book;
-import com.profile.svc.model.UserDetails;
-import com.profile.svc.model.Project;
+import com.profile.svc.shared.model.Book;
+import com.profile.svc.shared.model.UserDetails;
+import com.profile.svc.shared.model.Project;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

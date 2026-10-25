@@ -1,9 +1,9 @@
-package com.profile.svc.repository;
+package com.profile.svc.shared.repository;
 
 import com.datastax.astra.client.core.query.Filters;
 import com.datastax.astra.client.tables.Table;
-import com.profile.svc.model.Book;
-import com.profile.svc.repository.interfaces.BookDetailsRepository;
+import com.profile.svc.shared.model.Book;
+import com.profile.svc.shared.repository.interfaces.BookDetailsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -48,6 +48,15 @@ public class BookDetailsRepositoryImpl implements BookDetailsRepository {
             log.error("Error retrieving book by ID: {}", e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
 
+    @Override
+    public void saveBook(Book book) {
+        try {
+            collection.insertOne(book);
+        } catch (Exception e) {
+            log.error("Error saving book: {}", e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 }
