@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.Instant;
 @Data
 public class PublishData {
-    @JsonProperty("is_published")
+    @JsonProperty("published")
     boolean isPublished;
     @JsonProperty("published_date")
     Instant publishedDate;

@@ -32,7 +32,7 @@ public class Book {
     Integer inventory;
     @Column(name="print_to_order_link")
     String printToOrder;
-    @Column(name="pdf_version")
+    @Column(name="book_pdf_version")
     Metadata pdf;
     @Column(name="pages")
     String numOfPages;
