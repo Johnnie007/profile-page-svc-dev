@@ -1,4 +1,4 @@
-package com.profile.svc.model;
+package com.profile.svc.shared.model;
 
 
 import com.datastax.astra.client.tables.mapping.Column;
@@ -7,7 +7,6 @@ import com.datastax.astra.client.tables.mapping.PartitionSort;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.UUID;
 
 
@@ -33,8 +32,8 @@ public class Book {
     Integer inventory;
     @Column(name="print_to_order_link")
     String printToOrder;
-    @Column(name="pdf_version")
-    String pdf;
+    @Column(name="book_pdf_version")
+    Metadata pdf;
     @Column(name="pages")
     String numOfPages;
     @Column(name="cover_image_metadata")

@@ -1,9 +1,8 @@
-package com.profile.svc.repository;
+package com.profile.svc.shared.repository;
 
-import com.datastax.astra.client.core.query.Filters;
 import com.datastax.astra.client.tables.Table;
-import com.profile.svc.model.UserDetails;
-import com.profile.svc.repository.interfaces.UserDetailsRepository;
+import com.profile.svc.shared.model.UserDetails;
+import com.profile.svc.shared.repository.interfaces.UserDetailsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -26,5 +25,15 @@ public class UserDetailsRepositoryImpl implements UserDetailsRepository {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public void saveUserDetails(UserDetails userDetails) {
+        try {
+            table.insertOne(userDetails);
+        } catch (Exception e) {
+            log.error("Error saving User Details: {}", e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 }

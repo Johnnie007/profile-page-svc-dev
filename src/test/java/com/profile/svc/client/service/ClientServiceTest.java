@@ -1,12 +1,12 @@
 package com.profile.svc.client.service;
 
-import com.profile.svc.model.Book;
-import com.profile.svc.model.ClientModel;
-import com.profile.svc.model.Project;
-import com.profile.svc.model.UserDetails;
-import com.profile.svc.repository.interfaces.BookDetailsRepository;
-import com.profile.svc.repository.interfaces.ProjectRepository;
-import com.profile.svc.repository.interfaces.UserDetailsRepository;
+import com.profile.svc.shared.model.Book;
+import com.profile.svc.shared.model.ClientModel;
+import com.profile.svc.shared.model.Project;
+import com.profile.svc.shared.model.UserDetails;
+import com.profile.svc.shared.repository.interfaces.BookDetailsRepository;
+import com.profile.svc.shared.repository.interfaces.ProjectRepository;
+import com.profile.svc.shared.repository.interfaces.UserDetailsRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

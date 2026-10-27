@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 26MB
   application:
     name: service
   autoconfigure:
@@ -27,6 +31,11 @@ astra:
     projects: ${TBN_PROJECTS}
     book: ${TBN_BOOKS}
     details: ${TBN_USER_DETAILS}
+
+cloudinary:
+    cloud-name: ${CLOUDINARY_NAME}
+    key: ${CLOUDINARY_KEY}
+    secret: ${CLOUDINARY_SECRET}
 
 logging:
   level:

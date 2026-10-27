@@ -1,4 +1,4 @@
-package com.profile.svc.model;
+package com.profile.svc.shared.model;
 
 import lombok.Builder;
 import lombok.AllArgsConstructor;

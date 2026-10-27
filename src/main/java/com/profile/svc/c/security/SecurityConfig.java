@@ -35,21 +35,26 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().denyAll());
         return http.build();
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/client/**", corsConfiguration("GET", "OPTIONS"));
+        source.registerCorsConfiguration("/api/admin/**", corsConfiguration("POST", "OPTIONS"));
+        return source;
+    }
+
+    private CorsConfiguration corsConfiguration(String... methods) {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(corsProperties.allowedOrigins());
-        configuration.setAllowedMethods(List.of("GET", "OPTIONS"));
+        configuration.setAllowedMethods(List.of(methods));
         configuration.setAllowedHeaders(List.of("Accept", "Content-Type", "Authorization"));
         configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
-        return source;
+        return configuration;
     }
 }

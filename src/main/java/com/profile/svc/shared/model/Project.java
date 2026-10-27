@@ -1,4 +1,4 @@
-package com.profile.svc.model;
+package com.profile.svc.shared.model;
 
 import com.datastax.astra.client.tables.mapping.Column;
 import com.datastax.astra.client.tables.mapping.EntityTable;

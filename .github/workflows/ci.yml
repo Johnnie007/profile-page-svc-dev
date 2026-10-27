@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      REDIS_HOST: localhost
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ci-placeholder
+      URL_LOCAL: http://localhost:3000
+      URL_PROD: https://example.invalid
+      ASTRA_DB_EP: https://example.invalid
+      ASTRA_DB_TOKEN: ci-placeholder
+      ASTRA_DB_KEYSPACE: ci_placeholder
+      TBN_PROJECTS: projects
+      TBN_BOOKS: books
+      TBN_USER_DETAILS: user_details
+      CLOUDINARY_NAME: ci-placeholder
+      CLOUDINARY_KEY: ci-placeholder
+      CLOUDINARY_SECRET: ci-placeholder
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "26"
+
+      - name: Run tests
+        run: ./gradlew --no-daemon clean test

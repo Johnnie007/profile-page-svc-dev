@@ -10,7 +10,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
-import com.profile.svc.model.ClientModel;
+import com.profile.svc.shared.model.ClientModel;
 import com.profile.svc.c.middleware.RedisCacheErrorHandler;
 
 import java.time.Duration;

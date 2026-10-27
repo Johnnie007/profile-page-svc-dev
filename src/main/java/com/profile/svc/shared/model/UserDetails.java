@@ -1,4 +1,4 @@
-package com.profile.svc.model;
+package com.profile.svc.shared.model;
 
 
 import com.datastax.astra.client.tables.mapping.Column;
@@ -7,14 +7,16 @@ import com.datastax.astra.client.tables.mapping.PartitionBy;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 
 @EntityTable
 @Data
 @NoArgsConstructor
 public class UserDetails {
     @PartitionBy(1)
-    @Column( name="project_id")
-    String id;
+    @Column( name="user_id")
+    UUID id;
 
     @Column(name = "first_name")
     String firstName;
