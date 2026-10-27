@@ -11,7 +11,11 @@ jobs:
     name: Review dependency changes
     runs-on: ubuntu-latest
     steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
       - name: Check dependency changes
         uses: actions/dependency-review-action@v4
         with:
+          comment-summary-in-pr: always
           fail-on-severity: moderate
