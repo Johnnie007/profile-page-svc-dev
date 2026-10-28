@@ -18,7 +18,7 @@ public class Project {
     @Column( name="project_id")
     UUID id;
 
-    @Column( name="first_name")
+    @Column( name="name")
     String name;
 
     @Column( name="category")
@@ -33,6 +33,6 @@ public class Project {
     @Column( name="stack")
     List<String> techStack;
 
-    @Column( name="asset_metadata_type")
+    @Column( name="preview_image")
     Metadata imageMetaData;
 }
