@@ -45,3 +45,6 @@ logging:
           internal:
             command:
               AbstractCommandRunner: ERROR
+
+server:
+  port: ${PORT:8080}
