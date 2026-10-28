@@ -14,6 +14,7 @@ import com.profile.svc.shared.repository.interfaces.BookDetailsRepository;
 import com.profile.svc.shared.repository.interfaces.ProjectRepository;
 import com.profile.svc.shared.repository.interfaces.UserDetailsRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ public class Processor {
     ProjectRepository projectRepository;
     UserDetailsRepository userDetailsRepository;
 
+    @CacheEvict(cacheNames = "client-details-v2", key = "'profile'")
     public void processBookData(BookEntity entity) throws IOException {
         if (entity.getId() == null) entity.setId(UUID.randomUUID());
 
@@ -43,6 +45,7 @@ public class Processor {
         bookDetailsRepository.saveBook(book);
     }
 
+    @CacheEvict(cacheNames = "client-details-v2", key = "'profile'")
     public void processProjectData(ProjectEntity entity) throws IOException {
         if (entity.getId() == null) entity.setId(UUID.randomUUID());
 
@@ -52,6 +55,7 @@ public class Processor {
         projectRepository.saveProject(project);
     }
 
+    @CacheEvict(cacheNames = "client-details-v2", key = "'profile'")
     public void processUserData(UserEntity entity) throws IOException {
         if (entity.getId() == null){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Id must be provided.");

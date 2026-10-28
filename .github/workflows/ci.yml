@@ -20,20 +20,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      REDIS_HOST: localhost
-      REDIS_PORT: "6379"
-      REDIS_PASSWORD: ci-placeholder
-      URL_LOCAL: http://localhost:3000
-      URL_PROD: https://example.invalid
-      ASTRA_DB_EP: https://example.invalid
-      ASTRA_DB_TOKEN: ci-placeholder
-      ASTRA_DB_KEYSPACE: ci_placeholder
-      TBN_PROJECTS: projects
-      TBN_BOOKS: books
-      TBN_USER_DETAILS: user_details
-      CLOUDINARY_NAME: ci-placeholder
-      CLOUDINARY_KEY: ci-placeholder
-      CLOUDINARY_SECRET: ci-placeholder
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      URL_LOCAL: ${{ vars.URL_LOCAL }}
+      URL_PROD: ${{ vars.URL_PROD }}
+      ASTRA_DB_EP: ${{ secrets.ASTRA_DB_EP }}
+      ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
+      ASTRA_DB_KEYSPACE: ${{ secrets.ASTRA_DB_KEYSPACE }}
+      TBN_PROJECTS: ${{ vars.TBN_PROJECTS }}
+      TBN_BOOKS: ${{ vars.TBN_BOOKS }}
+      TBN_USER_DETAILS: ${{ vars.TBN_USER_DETAILS }}
+      CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
+      CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
+      CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECREY }}
     steps:
       - name: Check out source
         uses: actions/checkout@v5
@@ -46,3 +46,19 @@ jobs:
 
       - name: Run tests
         run: ./gradlew --no-daemon clean test
+
+  deploy:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Trigger Render deployment
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret is not configured."
+            exit 1
+          fi
+          curl --fail --silent --show-error --request POST "$RENDER_DEPLOY_HOOK_URL"

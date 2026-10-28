@@ -20,7 +20,6 @@ import java.util.List;
 public class SecurityConfig {
 
     private final CorsProperties corsProperties;
-
     public SecurityConfig(CorsProperties corsProperties) {
         this.corsProperties = corsProperties;
     }
@@ -35,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
+//                        .requestMatchers("/api/**").denyAll()
                         .anyRequest().denyAll());
         return http.build();
     }
