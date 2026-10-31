@@ -13,7 +13,7 @@ jobs:
         env:
           ASTRA_DB_API_ENDPOINT: ${{ secrets.MAINTENANCE_EP }}
           ASTRA_DB_KEYSPACE: ${{ secrets.ASTRA_DB_KEYSPACE }}
-          ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
+          ASTRA_DB_TOKEN: ${{ secrets.MAINTENANCE_TOKEN }}
         run: |
           : "${ASTRA_DB_API_ENDPOINT:?Set the Astra Data API base endpoint in repository secrets}"
           : "${ASTRA_DB_KEYSPACE:?Set ASTRA_DB_KEYSPACE in repository secrets}"
