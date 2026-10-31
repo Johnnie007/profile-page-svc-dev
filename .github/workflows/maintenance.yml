@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Check existing table row
         env:
-          ASTRA_DB_API_ENDPOINT: ${{ secrets.ASTRA_DB_EP }}
+          ASTRA_DB_API_ENDPOINT: ${{ secrets.MAINTENANCE_EP }}
           ASTRA_DB_KEYSPACE: ${{ secrets.ASTRA_DB_KEYSPACE }}
           ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
         run: |
