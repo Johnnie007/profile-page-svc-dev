@@ -54,7 +54,7 @@ jobs:
           ASTRA_DB_API_ENDPOINT: ${{ vars.ASTRA_DB_EP }}
           ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
         run: |
-          : "${ASTRA_DB_API_ENDPOINT:?Set the full Astra Data API endpoint in repository variables}"
+          : "${ASTRA_DB_EP:?Set the full Astra Data API endpoint in repository variables}"
           : "${ASTRA_DB_TOKEN:?Set ASTRA_DB_TOKEN in repository secrets}"
 
           response=$(curl --fail-with-body --silent --show-error \
