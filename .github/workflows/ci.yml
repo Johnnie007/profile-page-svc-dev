@@ -24,6 +24,7 @@ jobs:
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
       URL_LOCAL: ${{ vars.URL_LOCAL }}
+      URL_DEV: ${{vars.URL_DEV}}
       URL_PROD: ${{ vars.URL_PROD }}
       ASTRA_DB_EP: ${{ secrets.ASTRA_DB_EP }}
       ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
