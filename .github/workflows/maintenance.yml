@@ -25,7 +25,7 @@ jobs:
           if http_status=$(curl --silent --show-error \
             --output "$response_file" \
             --write-out '%{http_code}' \
-            "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/test/maintenance" \
+            "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/test/mock_table" \
             -H "Token: ${ASTRA_DB_TOKEN}" \
             -H "Content-Type: application/json" \
             --data-raw '{"findOne":{"filter":{"id":"11111111-1111-4111-8111-111111111111"}}}'); then
