@@ -15,6 +15,9 @@ jobs:
     outputs:
       should_run: ${{ steps.interval.outputs.should_run }}
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
       - name: Check time since last successful count
         id: interval
         env:
