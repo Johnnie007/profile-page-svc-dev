@@ -53,7 +53,7 @@ jobs:
         env:
           ASTRA_DB_ID: ${{ secrets.ASTRA_DB_ID }}
           ASTRA_DB_REGION: ${{ vars.ASTRA_DB_REGION }}
-          ASTRA_DB_KEYSPACE: ${{ vars.ASTRA_DB_KEYSPACE }}
+          ASTRA_DB_KEYSPACE: ${{ secrets.ASTRA_DB_KEYSPACE }}
           ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
         run: |
           response=$(curl --fail-with-body --silent --show-error \
