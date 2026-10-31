@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  count-users:
+  check-table-row:
     runs-on: ubuntu-latest
     steps:
-      - name: Count users
+      - name: Check existing table row
         env:
           ASTRA_DB_API_ENDPOINT: ${{ secrets.ASTRA_DB_EP }}
           ASTRA_DB_KEYSPACE: ${{ secrets.ASTRA_DB_KEYSPACE }}
@@ -25,4 +25,10 @@ jobs:
             -H "Content-Type: application/json" \
             --data-raw '{"findOne":{"filter":{"id":"d290f1ee-6c54-4b01-90e6-d701748f0851"}}}')
 
-          echo "$response" | jq -er '.status.count | "User count: \(.)"'
+          echo "$response" | jq -er '
+            if ((.errors // []) | length) > 0 then
+              error(.errors[0].message)
+            else
+              "Table read completed."
+            end
+          '
