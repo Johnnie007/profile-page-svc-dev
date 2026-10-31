@@ -59,7 +59,7 @@ jobs:
 
           response=$(curl --fail-with-body --silent --show-error \
             --request POST \
-            "$ASTRA_DB_API_ENDPOINT" \
+            "$ASTRA_DB__EP" \
             -H "Token: ${ASTRA_DB_TOKEN}" \
             -H "Content-Type: application/json" \
             --data-raw '{"countDocuments":{"collection":"users","filter":{}}}')
