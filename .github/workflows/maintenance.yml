@@ -23,6 +23,6 @@ jobs:
             "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/${ASTRA_DB_KEYSPACE}/maintenance" \
             -H "Token: ${ASTRA_DB_TOKEN}" \
             -H "Content-Type: application/json" \
-            --data-raw '{"countDocuments":{"filter":{"id":"d290f1ee-6c54-4b01-90e6-d701748f0851"}}}')
+            --data-raw '{"findOne":{"filter":{"id":"d290f1ee-6c54-4b01-90e6-d701748f0851"}}}')
 
           echo "$response" | jq -er '.status.count | "User count: \(.)"'
