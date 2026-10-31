@@ -11,9 +11,9 @@ jobs:
     steps:
       - name: Check existing table row
         env:
-          ASTRA_DB_API_ENDPOINT: ${{ secrets.MOCK_EP }}
+          ASTRA_DB_API_ENDPOINT: ${{ secrets.ASTRA_DB_EP }}
           ASTRA_DB_KEYSPACE: ${{ secrets.ASTRA_DB_KEYSPACE }}
-          ASTRA_DB_TOKEN: ${{ secrets.MOCK_TOKEN }}
+          ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
         run: |
           : "${ASTRA_DB_API_ENDPOINT:?Set the Astra Data API base endpoint in repository secrets}"
           : "${ASTRA_DB_KEYSPACE:?Set ASTRA_DB_KEYSPACE in repository secrets}"
@@ -25,7 +25,7 @@ jobs:
           if http_status=$(curl --silent --show-error \
             --output "$response_file" \
             --write-out '%{http_code}' \
-            "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/test/mock_table" \
+            "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/profile_database/maintenance" \
             -H "Token: ${ASTRA_DB_TOKEN}" \
             -H "Content-Type: application/json" \
             --data-raw '{"findOne":{"filter":{"id":"11111111-1111-4111-8111-111111111111"}}}'); then
