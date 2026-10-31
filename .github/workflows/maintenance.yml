@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: Count users
         env:
-          ASTRA_DB_API_ENDPOINT: ${{ vars.ASTRA_DB_API_ENDPOINT }}
+          ASTRA_DB_API_ENDPOINT: ${{ vars.ASTRA_DB_EP }}
           ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
         run: |
           : "${ASTRA_DB_API_ENDPOINT:?Set the full Astra Data API endpoint in repository variables}"
