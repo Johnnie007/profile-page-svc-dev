@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-//                        .requestMatchers("/api/**").denyAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                         .anyRequest().denyAll());
         return http.build();
     }

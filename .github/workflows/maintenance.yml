@@ -1,0 +1,65 @@
+name: DB Activation Maintenance
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  schedule-check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.interval.outputs.should_run }}
+    steps:
+      - name: Check time since last successful count
+        id: interval
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest_success=""
+          for run_id in $(gh run list \
+            --workflow maintenance.yml \
+            --status success \
+            --limit 100 \
+            --json databaseId \
+            --jq '.[].databaseId'); do
+            succeeded=$(gh api \
+              "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs" \
+              --jq '[.jobs[] | select(.name == "count-users" and .conclusion == "success")] | length')
+            if [ "$succeeded" -gt 0 ]; then
+              latest_success=$(gh run view "$run_id" --json updatedAt --jq '.updatedAt')
+              break
+            fi
+          done
+
+          if [ -z "$latest_success" ] || \
+             [ "$(( $(date +%s) - $(date -d "$latest_success" +%s) ))" -ge 129600 ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping: last successful count was less than 36 hours ago."
+          fi
+
+  count-users:
+    needs: schedule-check
+    if: needs.schedule-check.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Count users
+        env:
+          ASTRA_DB_ID: ${{ secrets.ASTRA_DB_ID }}
+          ASTRA_DB_REGION: ${{ vars.ASTRA_DB_REGION }}
+          ASTRA_DB_KEYSPACE: ${{ vars.ASTRA_DB_KEYSPACE }}
+          ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
+        run: |
+          response=$(curl --fail-with-body --silent --show-error \
+            "https://${ASTRA_DB_ID}-${ASTRA_DB_REGION}.apps.astra.datastax.com/api/json/v1/${ASTRA_DB_KEYSPACE}" \
+            -H "Token: ${ASTRA_DB_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{"countDocuments":{"collection":"users","filter":{}}}')
+
+          echo "$response" | jq -er '.status.count | "User count: \(.)"'
