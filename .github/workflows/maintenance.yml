@@ -51,15 +51,15 @@ jobs:
     steps:
       - name: Count users
         env:
-          ASTRA_DB_API_ENDPOINT: ${{ vars.ASTRA_DB_EP }}
+          ASTRA_DB_API_ENDPOINT: ${{ secrets.ASTRA_DB_EP }}
           ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
         run: |
-          : "${ASTRA_DB_EP:?Set the full Astra Data API endpoint in repository variables}"
+          : "${ASTRA_DB_API_ENDPOINT:?Set the full Astra Data API endpoint in repository variables}"
           : "${ASTRA_DB_TOKEN:?Set ASTRA_DB_TOKEN in repository secrets}"
 
           response=$(curl --fail-with-body --silent --show-error \
             --request POST \
-            "$ASTRA_DB__EP" \
+            "$ASTRA_DB_API_ENDPOINT" \
             -H "Token: ${ASTRA_DB_TOKEN}" \
             -H "Content-Type: application/json" \
             --data-raw '{"countDocuments":{"collection":"users","filter":{}}}')
