@@ -31,18 +31,20 @@ jobs:
             --data-raw '{"findOne":{"filter":{"id":"d290f1ee-6c54-4b01-90e6-d701748f0851"}}}'); then
             curl_status=0
           else
-            curl_status=$?
+            echo "Network error: curl failed to execute."
+            exit 1
           fi
 
           echo "Astra Data API HTTP status: ${http_status:-000}"
+          
           if [ -s "$response_file" ] && jq -e '(.errors // []) | length > 0' "$response_file" >/dev/null 2>&1; then
             jq -r '.errors[]?.message // empty | "Astra Data API error: \(.)"' "$response_file"
             exit 1
           fi
-
-          if [ "$curl_status" -ne 0 ]; then
-            echo "curl failed with exit code ${curl_status}; response body was not logged."
-            exit "$curl_status"
+          
+          if [ "$http_status" -lt 200 ] || [ "$http_status" -ge 300 ]; then
+            echo "Astra Data API returned failing HTTP status: $http_status"
+            cat "$response_file" 2>/dev/null || true
+            exit 1
           fi
 
-          echo "Table read completed."
