@@ -19,7 +19,30 @@ jobs:
           : "${ASTRA_DB_KEYSPACE:?Set ASTRA_DB_KEYSPACE in repository secrets}"
           : "${ASTRA_DB_TOKEN:?Set ASTRA_DB_TOKEN in repository secrets}"
 
-          curl --version | head -n 1
+          python3 - <<'PY'
+          import os
+          from urllib.parse import urlsplit
+
+          endpoint = os.environ["ASTRA_DB_API_ENDPOINT"]
+          parsed = urlsplit(endpoint)
+          checks = {
+              "HTTPS scheme": parsed.scheme == "https",
+              "hostname present": bool(parsed.hostname),
+              "base URL has no path/query/fragment": not (
+                  parsed.path or parsed.query or parsed.fragment
+              ),
+              "endpoint has no whitespace": not any(c.isspace() for c in endpoint),
+              "keyspace is one path segment": (
+                  bool(os.environ["ASTRA_DB_KEYSPACE"])
+                  and "/" not in os.environ["ASTRA_DB_KEYSPACE"]
+                  and not any(c.isspace() for c in os.environ["ASTRA_DB_KEYSPACE"])
+              ),
+          }
+          for label, passed in checks.items():
+              print(f"{label}: {'ok' if passed else 'FAILED'}")
+          if not all(checks.values()):
+              raise SystemExit("Invalid Astra endpoint/keyspace format.")
+          PY
 
           set -o pipefail
           curl --fail-with-body --silent --show-error \
