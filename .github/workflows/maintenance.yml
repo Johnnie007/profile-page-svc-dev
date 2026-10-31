@@ -20,7 +20,6 @@ jobs:
           : "${ASTRA_DB_TOKEN:?Set ASTRA_DB_TOKEN in repository secrets}"
 
           response=$(curl --fail-with-body --silent --show-error \
-            --request POST \
             "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/${ASTRA_DB_KEYSPACE}" \
             -H "Token: ${ASTRA_DB_TOKEN}" \
             -H "Content-Type: application/json" \
