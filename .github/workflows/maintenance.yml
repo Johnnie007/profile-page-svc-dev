@@ -19,41 +19,30 @@ jobs:
           : "${ASTRA_DB_KEYSPACE:?Set ASTRA_DB_KEYSPACE in repository secrets}"
           : "${ASTRA_DB_TOKEN:?Set ASTRA_DB_TOKEN in repository secrets}"
 
-          python3 - <<'PY'
-          import os
-          from urllib.parse import urlsplit
+          response_file=$(mktemp)
+          trap 'rm -f "$response_file"' EXIT
 
-          endpoint = os.environ["ASTRA_DB_API_ENDPOINT"]
-          parsed = urlsplit(endpoint)
-          checks = {
-              "HTTPS scheme": parsed.scheme == "https",
-              "hostname present": bool(parsed.hostname),
-              "base URL has no path/query/fragment": not (
-                  parsed.path or parsed.query or parsed.fragment
-              ),
-              "endpoint has no whitespace": not any(c.isspace() for c in endpoint),
-              "keyspace is one path segment": (
-                  bool(os.environ["ASTRA_DB_KEYSPACE"])
-                  and "/" not in os.environ["ASTRA_DB_KEYSPACE"]
-                  and not any(c.isspace() for c in os.environ["ASTRA_DB_KEYSPACE"])
-              ),
-          }
-          for label, passed in checks.items():
-              print(f"{label}: {'ok' if passed else 'FAILED'}")
-          if not all(checks.values()):
-              raise SystemExit("Invalid Astra endpoint/keyspace format.")
-          PY
-
-          set -o pipefail
-          curl --fail-with-body --silent --show-error \
+          if http_status=$(curl --silent --show-error \
+            --output "$response_file" \
+            --write-out '%{http_code}' \
             "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/${ASTRA_DB_KEYSPACE}/maintenance" \
             -H "Token: ${ASTRA_DB_TOKEN}" \
             -H "Content-Type: application/json" \
-            --data-raw '{"findOne":{"filter":{"id":"290f1ee-6c54-4b01-90e6-d701748f0851"}}}' \
-            | jq -er '
-            if ((.errors // []) | length) > 0 then
-              error(.errors[0].message)
-            else
-              "Table read completed."
-            end
-          '
+            --data-raw '{"findOne":{"filter":{"id":"d290f1ee-6c54-4b01-90e6-d701748f0851"}}}'); then
+            curl_status=0
+          else
+            curl_status=$?
+          fi
+
+          echo "Astra Data API HTTP status: ${http_status:-000}"
+          if [ -s "$response_file" ] && jq -e '(.errors // []) | length > 0' "$response_file" >/dev/null 2>&1; then
+            jq -r '.errors[]?.message // empty | "Astra Data API error: \(.)"' "$response_file"
+            exit 1
+          fi
+
+          if [ "$curl_status" -ne 0 ]; then
+            echo "curl failed with exit code ${curl_status}; response body was not logged."
+            exit "$curl_status"
+          fi
+
+          echo "Table read completed."
