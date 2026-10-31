@@ -19,6 +19,8 @@ jobs:
           : "${ASTRA_DB_KEYSPACE:?Set ASTRA_DB_KEYSPACE in repository secrets}"
           : "${ASTRA_DB_TOKEN:?Set ASTRA_DB_TOKEN in repository secrets}"
 
+          curl --version | head -n 1
+
           set -o pipefail
           curl --fail-with-body --silent --show-error \
             "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/${ASTRA_DB_KEYSPACE}/maintenance" \
