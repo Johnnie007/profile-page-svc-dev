@@ -39,3 +39,4 @@ jobs:
             echo "Service health check returned failing HTTP status: $http_status"
             cat "$response_file" 2>/dev/null || true
             exit 1
+          fi
