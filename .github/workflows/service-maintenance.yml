@@ -1,0 +1,41 @@
+name: Service Maintenance
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check-service-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check service health
+        env:
+          SERVICE_URL: ${{ secrets.SERVICE_EP }}
+        run: |
+          : "${SERVICE_URL:?Set the production URL in repository variables}"
+          
+          response_file=$(mktemp)
+          trap 'rm -f "$response_file"' EXIT
+
+          if http_status=$(curl --silent --show-error \
+            --output "$response_file" \
+            --write-out '%{http_code}' \
+            "${SERVICE_URL%/}/actuator/health"); then
+            curl_status=0
+          else
+            echo "Network error: curl failed to execute."
+            exit 1
+          fi
+
+          echo "Service health check HTTP status: ${http_status:-000}"
+          
+          if [ -s "$response_file" ] && jq -e '(.status // "") != "UP"' "$response_file" >/dev/null 2>&1; then
+            jq -r '.status // empty | "Service health check failed: \(.)"' "$response_file"
+            exit 1
+          fi
+          
+          if [ "$http_status" -lt 200 ] || [ "$http_status" -ge 300 ]; then
+            echo "Service health check returned failing HTTP status: $http_status"
+            cat "$response_file" 2>/dev/null || true
+            exit 1
