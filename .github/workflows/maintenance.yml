@@ -1,65 +1,49 @@
-name: DB Activation Maintenance
+name: Database Maintenance
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 6 * * *"
   workflow_dispatch:
 
-permissions:
-  actions: read
-  contents: read
-
 jobs:
-  schedule-check:
-    runs-on: ubuntu-latest
-    outputs:
-      should_run: ${{ steps.interval.outputs.should_run }}
-    steps:
-      - name: Check time since last successful count
-        id: interval
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          latest_success=""
-          for run_id in $(gh run list \
-            --workflow maintenance.yml \
-            --status success \
-            --limit 100 \
-            --json databaseId \
-            --jq '.[].databaseId'); do
-            succeeded=$(gh api \
-              "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs" \
-              --jq '[.jobs[] | select(.name == "count-users" and .conclusion == "success")] | length')
-            if [ "$succeeded" -gt 0 ]; then
-              latest_success=$(gh run view "$run_id" --json updatedAt --jq '.updatedAt')
-              break
-            fi
-          done
-
-          if [ -z "$latest_success" ] || \
-             [ "$(( $(date +%s) - $(date -d "$latest_success" +%s) ))" -ge 129600 ]; then
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "should_run=false" >> "$GITHUB_OUTPUT"
-            echo "Skipping: last successful count was less than 36 hours ago."
-          fi
-
-  count-users:
-    needs: schedule-check
-    if: needs.schedule-check.outputs.should_run == 'true'
+  check-table-row:
     runs-on: ubuntu-latest
     steps:
-      - name: Count users
+      - name: Check existing table row
         env:
-          ASTRA_DB_ID: ${{ secrets.ASTRA_DB_ID }}
-          ASTRA_DB_REGION: ${{ vars.ASTRA_DB_REGION }}
-          ASTRA_DB_KEYSPACE: ${{ vars.ASTRA_DB_KEYSPACE }}
-          ASTRA_DB_TOKEN: ${{ secrets.ASTRA_DB_TOKEN }}
+          ASTRA_DB_API_ENDPOINT: ${{ secrets.MAINTENANCE_EP }}
+          ASTRA_DB_KEYSPACE: ${{ secrets.ASTRA_DB_KEYSPACE }}
+          ASTRA_DB_TOKEN: ${{ secrets.MAINTENANCE_TOKEN }}
         run: |
-          response=$(curl --fail-with-body --silent --show-error \
-            "https://${ASTRA_DB_ID}-${ASTRA_DB_REGION}.apps.astra.datastax.com/api/json/v1/${ASTRA_DB_KEYSPACE}" \
+          : "${ASTRA_DB_API_ENDPOINT:?Set the Astra Data API base endpoint in repository secrets}"
+          : "${ASTRA_DB_KEYSPACE:?Set ASTRA_DB_KEYSPACE in repository secrets}"
+          : "${ASTRA_DB_TOKEN:?Set ASTRA_DB_TOKEN in repository secrets}"
+
+          response_file=$(mktemp)
+          trap 'rm -f "$response_file"' EXIT
+
+          if http_status=$(curl --silent --show-error \
+            --output "$response_file" \
+            --write-out '%{http_code}' \
+            "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/profile_database/maintenance" \
             -H "Token: ${ASTRA_DB_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d '{"countDocuments":{"collection":"users","filter":{}}}')
+            --data-raw '{"findOne":{"filter":{"id":"11111111-1111-4111-8111-111111111111"}}}'); then
+            curl_status=0
+          else
+            echo "Network error: curl failed to execute."
+            exit 1
+          fi
 
-          echo "$response" | jq -er '.status.count | "User count: \(.)"'
+          echo "Astra Data API HTTP status: ${http_status:-000}"
+          
+          if [ -s "$response_file" ] && jq -e '(.errors // []) | length > 0' "$response_file" >/dev/null 2>&1; then
+            jq -r '.errors[]?.message // empty | "Astra Data API error: \(.)"' "$response_file"
+            exit 1
+          fi
+          
+          if [ "$http_status" -lt 200 ] || [ "$http_status" -ge 300 ]; then
+            echo "Astra Data API returned failing HTTP status: $http_status"
+            cat "$response_file" 2>/dev/null || true
+            exit 1
+          fi
