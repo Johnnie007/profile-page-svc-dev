@@ -1,0 +1,49 @@
+name: Database Maintenance
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  check-table-row:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check existing table row
+        env:
+          ASTRA_DB_API_ENDPOINT: ${{ secrets.MAINTENANCE_EP }}
+          ASTRA_DB_KEYSPACE: ${{ secrets.ASTRA_DB_KEYSPACE }}
+          ASTRA_DB_TOKEN: ${{ secrets.MAINTENANCE_TOKEN }}
+        run: |
+          : "${ASTRA_DB_API_ENDPOINT:?Set the Astra Data API base endpoint in repository secrets}"
+          : "${ASTRA_DB_KEYSPACE:?Set ASTRA_DB_KEYSPACE in repository secrets}"
+          : "${ASTRA_DB_TOKEN:?Set ASTRA_DB_TOKEN in repository secrets}"
+
+          response_file=$(mktemp)
+          trap 'rm -f "$response_file"' EXIT
+
+          if http_status=$(curl --silent --show-error \
+            --output "$response_file" \
+            --write-out '%{http_code}' \
+            "${ASTRA_DB_API_ENDPOINT%/}/api/json/v1/profile_database/maintenance" \
+            -H "Token: ${ASTRA_DB_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data-raw '{"findOne":{"filter":{"id":"11111111-1111-4111-8111-111111111111"}}}'); then
+            curl_status=0
+          else
+            echo "Network error: curl failed to execute."
+            exit 1
+          fi
+
+          echo "Astra Data API HTTP status: ${http_status:-000}"
+          
+          if [ -s "$response_file" ] && jq -e '(.errors // []) | length > 0' "$response_file" >/dev/null 2>&1; then
+            jq -r '.errors[]?.message // empty | "Astra Data API error: \(.)"' "$response_file"
+            exit 1
+          fi
+          
+          if [ "$http_status" -lt 200 ] || [ "$http_status" -ge 300 ]; then
+            echo "Astra Data API returned failing HTTP status: $http_status"
+            cat "$response_file" 2>/dev/null || true
+            exit 1
+          fi
