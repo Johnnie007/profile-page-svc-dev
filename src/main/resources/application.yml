@@ -19,6 +19,7 @@ app:
   cors:
     allowed-origins:
       - ${URL_LOCAL}
+      - ${DEV_URL}
       - ${URL_PROD}
   rate-limit:
     capacity: 20
