@@ -21,7 +21,7 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    if: github.event.pull_request.merged == true
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     env:
       REDIS_HOST: ${{ secrets.REDIS_HOST }}
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
