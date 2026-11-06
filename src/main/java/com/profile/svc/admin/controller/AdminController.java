@@ -34,7 +34,7 @@ public class AdminController {
     }
 
     @PostMapping( value = "/user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> saveProject(@ModelAttribute UserEntity request)
+    public ResponseEntity<?> saveUserDetails(@ModelAttribute UserEntity request)
             throws IOException {
         processService.processUserData(request);
         return ResponseEntity.ok().build();
